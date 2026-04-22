@@ -117,8 +117,8 @@
         {% if available_books|length == 0 %}
             <li style="border-left: 5px solid grey;">Nothing available right now.</li>
         {% else %}
-            {% for book in available_books %}
-                <li>{{ book }}</li>
+            {% for book, qty in available_books.items() %}
+                <li><b>{{ book }}</b> (Copies Left: {{ qty }})</li>
             {% endfor %}
         {% endif %}
     </ul>

@@ -21,24 +21,35 @@ BORROWERS = {
 # --- Beginner Friendly Python Storage Logic ---
 def load_books():
     # Try to open the file if it exists
+    working_dictionary = {}
     try:
-        my_books = []
         with open("books.txt", "r") as file:
             for line in file:
-                # Remove the hidden enter key press at the end of the line
+                # Remove the hidden enter key press
                 clean_line = line.replace("\n", "")
-                my_books.append(clean_line)
-        return my_books
+                
+                # Split the line by the comma we used when saving
+                parts = clean_line.split(" , ")
+                
+                # Error check: make sure the line split perfectly into 2 pieces!
+                if len(parts) == 2:
+                    book_name = parts[0]
+                    quantity = int(parts[1])
+                    # Put it in our dictionary
+                    working_dictionary[book_name] = quantity
+                
+        return working_dictionary
     except:
-        # If the file is not there, start with some default books
-        return ["Harry Potter", "Atomic Habits", "Python Crash Course"]
+        # If the file is not there, start with some default books and quantities
+        return {"Harry Potter": 3, "Atomic Habits": 2, "Python Crash Course": 1}
 
 
 def save_books():
     # Write all the books to the text file safely
     with open("books.txt", "w") as file:
-        for book in books:
-            file.write(book + "\n")
+        for book_name, quantity in books.items():
+            # Combine them with a comma and write them to the file
+            file.write(book_name + " , " + str(quantity) + "\n")
 
 
 def load_borrowed():
@@ -103,7 +114,13 @@ def add_book():
     # If the password is correct, save the book
     if is_allowed == True:
         if new_book != "":
-            books.append(new_book)
+            # If the book is already in our dictionary, add +1 to the copies
+            if new_book in books:
+                books[new_book] = books[new_book] + 1
+            # If it's a completely new book, start tracking it at 1 copy
+            else:
+                books[new_book] = 1
+                
             save_books() 
         
     return redirect("/")
@@ -128,8 +145,14 @@ def borrow_book():
     if is_allowed == True:
         if book_to_borrow in books:
             if person_who_wants_it != "":
-                # Move it from one list to the other
-                books.remove(book_to_borrow)
+                # Subtract 1 copy from the inventory
+                books[book_to_borrow] = books[book_to_borrow] - 1
+                
+                # If there are officially 0 copies left, remove it from the list completely
+                if books[book_to_borrow] == 0:
+                    books.pop(book_to_borrow)
+                    
+                # Put it in the borrowed dictionary
                 borrowed_books[book_to_borrow] = person_who_wants_it
                 save_books()
                 save_borrowed()
@@ -148,9 +171,15 @@ def return_book():
     
     # Make sure the book is actually borrowed
     if book_to_return in borrowed_books:
-        # Move it from the dictionary back to the list
+        # Remove it from the borrower tracking
         borrowed_books.pop(book_to_return)
-        books.append(book_to_return)
+        
+        # Add a copy back to the inventory
+        if book_to_return in books:
+            books[book_to_return] = books[book_to_return] + 1
+        else:
+            books[book_to_return] = 1
+            
         save_books()
         save_borrowed()
         return redirect("/")
@@ -172,10 +201,10 @@ def remove_book():
         if LIBRARIANS[lib_id] == lib_pass:
             is_allowed = True
             
-    # If the librarian is logged in correctly, delete the book
+    # If the librarian is logged in correctly, totally wipe the book from inventory
     if is_allowed == True:
         if book_to_remove in books:
-            books.remove(book_to_remove)
+            books.pop(book_to_remove)
             save_books()
             
     return redirect("/")
