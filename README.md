@@ -10,12 +10,4 @@ i didn't use any complicated databases, it just secretly saves all the books int
 - you can return books
 - everything saves automatically to `books.txt`
 
-### how to run my project:
 
-first, make sure you have flask installed:
-`pip install -r requirements.txt`
-
-then you just run the main file:
-`python library_management.py`
-
-after that just click the local link it gives you (like http://127.0.0.1:8080) and it will open in your browser!
