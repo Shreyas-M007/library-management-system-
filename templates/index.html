@@ -101,7 +101,15 @@
 <body>
 
 <div class="box">
-    <h1>Library Manager</h1>
+    <h1 class="jump-text">Library Manager</h1>
+    
+    <!-- Display beginner errors here! -->
+    {% if error_msg %}
+        <div style="background-color: #ffcccc; color: red; border: 1px solid red; padding: 10px; text-align: center; margin-bottom: 15px; border-radius: 5px;">
+            <b>Wait!</b> {{ error_msg }}
+        </div>
+    {% endif %}
+
     <div class="line"></div>
 
     <h3>Available Books</h3>

@@ -124,7 +124,7 @@ def borrow_book():
         if BORROWERS[borrow_id] == borrow_pass:
             is_allowed = True
             
-    # If the password is correct, borrow the book
+    # If the password is correct, process the book
     if is_allowed == True:
         if book_to_borrow in books:
             if person_who_wants_it != "":
@@ -133,6 +133,10 @@ def borrow_book():
                 borrowed_books[book_to_borrow] = person_who_wants_it
                 save_books()
                 save_borrowed()
+                return redirect("/")
+        else:
+            # If the book does not exist, send a beginner error to the frontend!
+            return render_template("index.html", available_books=books, borrowed=borrowed_books, error_msg="Valid book only!")
         
     return redirect("/")
 
@@ -149,8 +153,10 @@ def return_book():
         books.append(book_to_return)
         save_books()
         save_borrowed()
-        
-    return redirect("/")
+        return redirect("/")
+    else:
+        # Send an error if it doesn't exist
+        return render_template("index.html", available_books=books, borrowed=borrowed_books, error_msg="Valid book only!")
 
 
 # Route to completely remove/delete a book permanently
