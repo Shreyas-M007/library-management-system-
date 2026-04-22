@@ -9,13 +9,13 @@ app = Flask(__name__)
 # NOTE: these must all stay lowercase inside the python code!
 LIBRARIANS = {
     "admin": "1234",
-    "shreyas": "boss123"
+    "Shreyas": "0007"
 }
 
 BORROWERS = {
     "user": "0000",
-    "john": "apple123",
-    "mary": "books456"
+    "Shivam": "1111",
+    "Shivram": "2222"
 }
 
 
