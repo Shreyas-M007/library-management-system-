@@ -4,8 +4,16 @@ from flask import Flask, render_template, request, redirect
 # Make our app
 app = Flask(__name__)
 
-# --- Beginner Friendly Python Storage Logic ---
 
+# --- Hardcoded Passwords (Beginner logic) ---
+LIBRARIAN_ID = "admin"
+LIBRARIAN_PASS = "1234"
+
+BORROWER_ID = "user"
+BORROWER_PASS = "0000"
+
+
+# --- Beginner Friendly Python Storage Logic ---
 def load_books():
     # Try to open the file if it exists
     try:
@@ -76,11 +84,15 @@ def home():
 def add_book():
     # Get the input and remove extra spaces safely
     new_book = request.form.get("book_name").strip()
+    lib_id = request.form.get("librarian_id").strip()
+    lib_pass = request.form.get("password").strip()
     
-    # If the user typed something, add it!
-    if new_book != "":
-        books.append(new_book)
-        save_books() # Save the text file
+    # Check if they have the correct permissions!
+    if lib_id == LIBRARIAN_ID and lib_pass == LIBRARIAN_PASS:
+        # If the user typed something, add it!
+        if new_book != "":
+            books.append(new_book)
+            save_books() # Save the text file
         
     return redirect("/")
 
@@ -90,17 +102,21 @@ def add_book():
 def borrow_book():
     book_to_borrow = request.form.get("book_name").strip()
     person_who_wants_it = request.form.get("person_name").strip()
+    borrow_id = request.form.get("borrower_id").strip()
+    borrow_pass = request.form.get("password").strip()
     
-    # Make sure they typed both things and the book is available
-    if book_to_borrow in books and person_who_wants_it != "":
-        # Take it out of the available list
-        books.remove(book_to_borrow)
-        # Put it in the borrowed dictionary
-        borrowed_books[book_to_borrow] = person_who_wants_it
-        
-        # Save both changes to the computer files
-        save_books()
-        save_borrowed()
+    # Check if they have the correct permissions!
+    if borrow_id == BORROWER_ID and borrow_pass == BORROWER_PASS:
+        # Make sure they typed both things and the book is available
+        if book_to_borrow in books and person_who_wants_it != "":
+            # Take it out of the available list
+            books.remove(book_to_borrow)
+            # Put it in the borrowed dictionary
+            borrowed_books[book_to_borrow] = person_who_wants_it
+            
+            # Save both changes to the computer files
+            save_books()
+            save_borrowed()
         
     return redirect("/")
 
@@ -121,6 +137,25 @@ def return_book():
         save_books()
         save_borrowed()
         
+    return redirect("/")
+
+
+# Route to completely remove/delete a book permanently
+@app.route("/remove", methods=["POST"])
+def remove_book():
+    book_to_remove = request.form.get("book_name").strip()
+    lib_id = request.form.get("librarian_id").strip()
+    lib_pass = request.form.get("password").strip()
+    
+    # Check if they have the right admin permissions
+    if lib_id == LIBRARIAN_ID and lib_pass == LIBRARIAN_PASS:
+        # Check if the book is actually in our available list
+        if book_to_remove in books:
+            books.remove(book_to_remove)
+            
+            # Save changes to completely delete it from the text file
+            save_books()
+            
     return redirect("/")
 
 

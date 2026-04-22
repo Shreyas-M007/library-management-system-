@@ -135,6 +135,8 @@
         <b>Add a book</b>
         <form action="/add" method="POST">
             <input type="text" name="book_name" placeholder="book name" required>
+            <input type="text" name="librarian_id" placeholder="librarian ID" required>
+            <input type="password" name="password" placeholder="password" required>
             <button type="submit" id="btn1">Add Book</button>
         </form>
     </div>
@@ -144,6 +146,8 @@
         <form action="/borrow" method="POST">
             <input type="text" name="book_name" placeholder="book name" required>
             <input type="text" name="person_name" placeholder="your name" required>
+            <input type="text" name="borrower_id" placeholder="borrower ID" required>
+            <input type="password" name="password" placeholder="password" required>
             <button type="submit" id="btn2">Borrow Book</button>
         </form>
     </div>
@@ -153,6 +157,17 @@
         <form action="/return_book" method="POST">
             <input type="text" name="book_name" placeholder="book name" required>
             <button type="submit" id="btn3">Return</button>
+        </form>
+    </div>
+
+    <div class="form-box">
+        <b style="color: red;">Remove Book Permanently</b>
+        <form action="/remove" method="POST">
+            <input type="text" name="book_name" placeholder="book name to delete" required>
+            <input type="text" name="librarian_id" placeholder="librarian ID" required>
+            <input type="password" name="password" placeholder="password" required>
+            <!-- inline style for red button beginner style -->
+            <button type="submit" style="background-color: darkred;">Delete Forever</button>
         </form>
     </div>
 
