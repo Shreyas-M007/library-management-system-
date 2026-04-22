@@ -124,5 +124,6 @@ def return_book():
     return redirect("/")
 
 
-# This line runs our app so we can see it! 
-app.run(debug=True, port=8080)
+# This tricky line is REQUIRED by servers like PythonAnywhere to avoid crashing!
+if __name__ == "__main__":
+    app.run(debug=True, port=8080)
