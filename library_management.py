@@ -1,0 +1,128 @@
+# Import the flask library
+from flask import Flask, render_template, request, redirect
+
+# Make our app
+app = Flask(__name__)
+
+# --- Beginner Friendly Python Storage Logic ---
+
+def load_books():
+    # Try to open the file if it exists
+    try:
+        my_books = []
+        with open("books.txt", "r") as file:
+            for line in file:
+                # Remove the hidden enter key press at the end of the line
+                clean_line = line.replace("\n", "")
+                my_books.append(clean_line)
+        return my_books
+    except:
+        # If the file is not there, start with some default books
+        return ["Harry Potter", "Atomic Habits", "Python Crash Course"]
+
+
+def save_books():
+    # Write all the books to the text file
+    with open("books.txt", "w") as file:
+        for book in books:
+            file.write(book + "\n")
+
+
+def load_borrowed():
+    working_dictionary = {}
+    # Try to open the file if it exists
+    try:
+        with open("borrowed_books.txt", "r") as file:
+            for line in file:
+                # Remove the hidden enter key press
+                clean_line = line.replace("\n", "")
+                
+                # Split the line by the comma we used when saving
+                parts = clean_line.split(" , ")
+                book_name = parts[0]
+                person_name = parts[1]
+                
+                # Put it in our dictionary
+                working_dictionary[book_name] = person_name
+                
+        return working_dictionary
+    except:
+        # If the file is not there, return an empty dictionary
+        return {}
+
+
+def save_borrowed():
+    # Write all borrowed books back to the text file
+    with open("borrowed_books.txt", "w") as file:
+        for book_name, person_name in borrowed_books.items():
+            # Combine them with a comma and write them to the file
+            file.write(book_name + " , " + person_name + "\n")
+
+
+# 1. Start the memory variables by using the load functions
+books = load_books()
+borrowed_books = load_borrowed()
+
+
+# The main home page
+@app.route("/")
+def home():
+    # Show the HTML file and give it our lists and dictionaries
+    return render_template("index.html", available_books=books, borrowed=borrowed_books)
+
+
+# Route to add a book
+@app.route("/add", methods=["POST"])
+def add_book():
+    # Get the input and remove extra spaces safely
+    new_book = request.form.get("book_name").strip()
+    
+    # If the user typed something, add it!
+    if new_book != "":
+        books.append(new_book)
+        save_books() # Save the text file
+        
+    return redirect("/")
+
+
+# Route to borrow a book
+@app.route("/borrow", methods=["POST"])
+def borrow_book():
+    book_to_borrow = request.form.get("book_name").strip()
+    person_who_wants_it = request.form.get("person_name").strip()
+    
+    # Make sure they typed both things and the book is available
+    if book_to_borrow in books and person_who_wants_it != "":
+        # Take it out of the available list
+        books.remove(book_to_borrow)
+        # Put it in the borrowed dictionary
+        borrowed_books[book_to_borrow] = person_who_wants_it
+        
+        # Save both changes to the computer files
+        save_books()
+        save_borrowed()
+        
+    return redirect("/")
+
+
+# Route to return a book
+@app.route("/return_book", methods=["POST"])
+def return_book():
+    book_to_return = request.form.get("book_name").strip()
+    
+    # Make sure the book is actually borrowed
+    if book_to_return in borrowed_books:
+        # Take it out of the dictionary
+        borrowed_books.pop(book_to_return)
+        # Put it back in the list
+        books.append(book_to_return)
+        
+        # Save both changes to the computer files
+        save_books()
+        save_borrowed()
+        
+    return redirect("/")
+
+
+# This line runs our app so we can see it! 
+app.run(debug=True, port=8080)

@@ -1,0 +1,11 @@
+# Ignore Python cache files
+__pycache__/
+*.py[cod]
+
+# Ignore Mac system files
+.DS_Store
+
+# Ignore our local text file databases so we don't accidentally 
+# overwrite a live public database with our test data!
+books.txt
+borrowed_books.txt

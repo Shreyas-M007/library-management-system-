@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Library System</title>
+    <style>
+        /* page bg */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(#4b6cb7, #182848);
+            background-attachment: fixed;
+            color: #333;
+        }
+
+        /* center the main box */
+        .box {
+            width: 500px;
+            margin: auto;
+            margin-top: 50px;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        .line {
+            border-bottom: 2px solid lightgrey;
+            margin-bottom: 20px;
+        }
+
+        /* book lists */
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #f4f4f4;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 5px solid blue;
+            transition: 0.2s;
+        }
+
+        /* cool hover effect for list items */
+        li:hover {
+            transform: scale(1.05);
+            border-left: 5px solid orange;
+        }
+
+        /* form layout */
+        .form-box {
+            background-color: #f9f9f9;
+            padding: 15px;
+            margin-top: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input {
+            width: 95%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border: 1px solid grey;
+            border-radius: 3px;
+        }
+
+        input:focus {
+            border: 2px solid blue;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* dynamic hover buttons from 2nd edit */
+        #btn1 { background: linear-gradient(135deg, #3498db, #2980b9); }
+        #btn1:hover { background: linear-gradient(135deg, #2980b9, #2471a3); transform: translateY(-4px); box-shadow: 0px 8px 15px rgba(52,152,219,0.3); }
+
+        #btn2 { background: linear-gradient(135deg, #e67e22, #d35400); }
+        #btn2:hover { background: linear-gradient(135deg, #d35400, #ba4a00); transform: translateY(-4px); box-shadow: 0px 8px 15px rgba(230,126,34,0.3); }
+
+        #btn3 { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+        #btn3:hover { background: linear-gradient(135deg, #27ae60, #229954); transform: translateY(-4px); box-shadow: 0px 8px 15px rgba(46,204,113,0.3); }
+
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h1>Library Manager</h1>
+    <div class="line"></div>
+
+    <h3>Available Books</h3>
+    <ul>
+        {% if available_books|length == 0 %}
+            <li style="border-left: 5px solid grey;">Nothing available right now.</li>
+        {% else %}
+            {% for book in available_books %}
+                <li>{{ book }}</li>
+            {% endfor %}
+        {% endif %}
+    </ul>
+
+    <h3>Borrowed Books</h3>
+    <ul>
+        {% if borrowed|length == 0 %}
+            <li style="border-left: 5px solid grey;">No books are borrowed.</li>
+        {% else %}
+            {% for b_book, person in borrowed.items() %}
+                <li>
+                    <b>{{ b_book }}</b> 
+                    (Borrowed by: {{ person }})
+                </li>
+            {% endfor %}
+        {% endif %}
+    </ul>
+
+    <!-- forms down here -->
+    
+    <div class="form-box">
+        <b>Add a book</b>
+        <form action="/add" method="POST">
+            <input type="text" name="book_name" placeholder="book name" required>
+            <button type="submit" id="btn1">Add Book</button>
+        </form>
+    </div>
+
+    <div class="form-box">
+        <b>Borrow</b>
+        <form action="/borrow" method="POST">
+            <input type="text" name="book_name" placeholder="book name" required>
+            <input type="text" name="person_name" placeholder="your name" required>
+            <button type="submit" id="btn2">Borrow Book</button>
+        </form>
+    </div>
+
+    <div class="form-box">
+        <b>Return</b>
+        <form action="/return_book" method="POST">
+            <input type="text" name="book_name" placeholder="book name" required>
+            <button type="submit" id="btn3">Return</button>
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>
