@@ -5,12 +5,17 @@ from flask import Flask, render_template, request, redirect
 app = Flask(__name__)
 
 
-# --- Hardcoded Passwords (Beginner logic) ---
-LIBRARIAN_ID = "admin"
-LIBRARIAN_PASS = "1234"
+# --- Hardcoded Passwords (Beginner logic using Dictionaries) ---
+LIBRARIANS = {
+    "admin": "1234",
+    "shreyas": "boss123"
+}
 
-BORROWER_ID = "user"
-BORROWER_PASS = "0000"
+BORROWERS = {
+    "user": "0000",
+    "john": "apple123",
+    "mary": "books456"
+}
 
 
 # --- Beginner Friendly Python Storage Logic ---
@@ -87,8 +92,8 @@ def add_book():
     lib_id = request.form.get("librarian_id").strip()
     lib_pass = request.form.get("password").strip()
     
-    # Check if they have the correct permissions!
-    if lib_id == LIBRARIAN_ID and lib_pass == LIBRARIAN_PASS:
+    # Check if the typed ID is inside our dictionary AND matches exactly
+    if lib_id in LIBRARIANS and LIBRARIANS[lib_id] == lib_pass:
         # If the user typed something, add it!
         if new_book != "":
             books.append(new_book)
@@ -105,8 +110,8 @@ def borrow_book():
     borrow_id = request.form.get("borrower_id").strip()
     borrow_pass = request.form.get("password").strip()
     
-    # Check if they have the correct permissions!
-    if borrow_id == BORROWER_ID and borrow_pass == BORROWER_PASS:
+    # Check if the typed borrower account matches exactly
+    if borrow_id in BORROWERS and BORROWERS[borrow_id] == borrow_pass:
         # Make sure they typed both things and the book is available
         if book_to_borrow in books and person_who_wants_it != "":
             # Take it out of the available list
@@ -147,8 +152,8 @@ def remove_book():
     lib_id = request.form.get("librarian_id").strip()
     lib_pass = request.form.get("password").strip()
     
-    # Check if they have the right admin permissions
-    if lib_id == LIBRARIAN_ID and lib_pass == LIBRARIAN_PASS:
+    # Check if the typed ID is inside our dictionary AND matches perfectly
+    if lib_id in LIBRARIANS and LIBRARIANS[lib_id] == lib_pass:
         # Check if the book is actually in our available list
         if book_to_remove in books:
             books.remove(book_to_remove)
