@@ -35,7 +35,7 @@ def load_books():
 
 
 def save_books():
-    # Write all the books to the text file
+    # Write all the books to the text file safely
     with open("books.txt", "w") as file:
         for book in books:
             file.write(book + "\n")
@@ -52,11 +52,13 @@ def load_borrowed():
                 
                 # Split the line by the comma we used when saving
                 parts = clean_line.split(" , ")
-                book_name = parts[0]
-                person_name = parts[1]
                 
-                # Put it in our dictionary
-                working_dictionary[book_name] = person_name
+                # Error check: make sure the line split perfectly into 2 pieces!
+                if len(parts) == 2:
+                    book_name = parts[0]
+                    person_name = parts[1]
+                    # Put it in our dictionary
+                    working_dictionary[book_name] = person_name
                 
         return working_dictionary
     except:
@@ -65,7 +67,7 @@ def load_borrowed():
 
 
 def save_borrowed():
-    # Write all borrowed books back to the text file
+    # Write all borrowed books back to the text file safely
     with open("borrowed_books.txt", "w") as file:
         for book_name, person_name in borrowed_books.items():
             # Combine them with a comma and write them to the file
@@ -87,17 +89,22 @@ def home():
 # Route to add a book
 @app.route("/add", methods=["POST"])
 def add_book():
-    # Get the input and remove extra spaces safely
-    new_book = request.form.get("book_name").strip()
-    lib_id = request.form.get("librarian_id").strip()
-    lib_pass = request.form.get("password").strip()
+    # Get the input safely (use default "" if failing) to prevent Server Crashes
+    new_book = request.form.get("book_name", "").strip()
+    lib_id = request.form.get("librarian_id", "").strip()
+    lib_pass = request.form.get("password", "").strip()
     
-    # Check if the typed ID is inside our dictionary AND matches exactly
-    if lib_id in LIBRARIANS and LIBRARIANS[lib_id] == lib_pass:
-        # If the user typed something, add it!
+    # Beginner-friendly safe checking logic
+    is_allowed = False
+    if lib_id in LIBRARIANS:
+        if LIBRARIANS[lib_id] == lib_pass:
+            is_allowed = True
+            
+    # If the password is correct, save the book
+    if is_allowed == True:
         if new_book != "":
             books.append(new_book)
-            save_books() # Save the text file
+            save_books() 
         
     return redirect("/")
 
@@ -105,23 +112,27 @@ def add_book():
 # Route to borrow a book
 @app.route("/borrow", methods=["POST"])
 def borrow_book():
-    book_to_borrow = request.form.get("book_name").strip()
-    person_who_wants_it = request.form.get("person_name").strip()
-    borrow_id = request.form.get("borrower_id").strip()
-    borrow_pass = request.form.get("password").strip()
+    # Safely get all inputs so we never get a NoneType crash error
+    book_to_borrow = request.form.get("book_name", "").strip()
+    person_who_wants_it = request.form.get("person_name", "").strip()
+    borrow_id = request.form.get("borrower_id", "").strip()
+    borrow_pass = request.form.get("password", "").strip()
     
-    # Check if the typed borrower account matches exactly
-    if borrow_id in BORROWERS and BORROWERS[borrow_id] == borrow_pass:
-        # Make sure they typed both things and the book is available
-        if book_to_borrow in books and person_who_wants_it != "":
-            # Take it out of the available list
-            books.remove(book_to_borrow)
-            # Put it in the borrowed dictionary
-            borrowed_books[book_to_borrow] = person_who_wants_it
+    # Beginner-friendly safe checking logic
+    is_allowed = False
+    if borrow_id in BORROWERS:
+        if BORROWERS[borrow_id] == borrow_pass:
+            is_allowed = True
             
-            # Save both changes to the computer files
-            save_books()
-            save_borrowed()
+    # If the password is correct, borrow the book
+    if is_allowed == True:
+        if book_to_borrow in books:
+            if person_who_wants_it != "":
+                # Move it from one list to the other
+                books.remove(book_to_borrow)
+                borrowed_books[book_to_borrow] = person_who_wants_it
+                save_books()
+                save_borrowed()
         
     return redirect("/")
 
@@ -129,16 +140,13 @@ def borrow_book():
 # Route to return a book
 @app.route("/return_book", methods=["POST"])
 def return_book():
-    book_to_return = request.form.get("book_name").strip()
+    book_to_return = request.form.get("book_name", "").strip()
     
     # Make sure the book is actually borrowed
     if book_to_return in borrowed_books:
-        # Take it out of the dictionary
+        # Move it from the dictionary back to the list
         borrowed_books.pop(book_to_return)
-        # Put it back in the list
         books.append(book_to_return)
-        
-        # Save both changes to the computer files
         save_books()
         save_borrowed()
         
@@ -148,17 +156,20 @@ def return_book():
 # Route to completely remove/delete a book permanently
 @app.route("/remove", methods=["POST"])
 def remove_book():
-    book_to_remove = request.form.get("book_name").strip()
-    lib_id = request.form.get("librarian_id").strip()
-    lib_pass = request.form.get("password").strip()
+    book_to_remove = request.form.get("book_name", "").strip()
+    lib_id = request.form.get("librarian_id", "").strip()
+    lib_pass = request.form.get("password", "").strip()
     
-    # Check if the typed ID is inside our dictionary AND matches perfectly
-    if lib_id in LIBRARIANS and LIBRARIANS[lib_id] == lib_pass:
-        # Check if the book is actually in our available list
+    # Beginner-friendly safe checking logic
+    is_allowed = False
+    if lib_id in LIBRARIANS:
+        if LIBRARIANS[lib_id] == lib_pass:
+            is_allowed = True
+            
+    # If the librarian is logged in correctly, delete the book
+    if is_allowed == True:
         if book_to_remove in books:
             books.remove(book_to_remove)
-            
-            # Save changes to completely delete it from the text file
             save_books()
             
     return redirect("/")
