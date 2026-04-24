@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Library Portal</title>
+    <title>Librarian Login</title>
     <style>
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
 
@@ -354,117 +354,32 @@ input[type="number"]:focus {
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container auth-panel">
         <div class="glass-panel">
-            <div class="header">
-                <h1>📚 Library Portal</h1>
-                <div class="header-actions">
-                    <a href="/admin_login">Librarian Login</a>
-                </div>
-            </div>
-
+            <h2 style="text-align: center; margin-bottom: 30px;">Librarian Login</h2>
+            
             {% if error_msg %}
                 <div class="alert alert-error">
                     <strong>Error:</strong>&nbsp;{{ error_msg }}
                 </div>
             {% endif %}
 
-            <div class="dashboard-grid">
-                <!-- Left Column: Books -->
-                <div class="books-section">
-                    <h2>Available Books</h2>
-                    {% if available_books|length == 0 %}
-                        <div class="empty-state">No books are currently available.</div>
-                    {% else %}
-                        {% for book, qty in available_books.items() %}
-                            <div class="book-card">
-                                <div class="book-info">
-                                    <h4>{{ book }}</h4>
-                                    <p>Standard Edition</p>
-                                </div>
-                                <div class="badge available">{{ qty }} Copies Left</div>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-
-                    <h2 style="margin-top: 30px;">Currently Borrowed</h2>
-                    {% if borrowed|length == 0 %}
-                        <div class="empty-state">No books are currently borrowed.</div>
-                    {% else %}
-                        {% for b_book, person in borrowed.items() %}
-                            <div class="book-card">
-                                <div class="book-info">
-                                    <h4>{{ b_book }}</h4>
-                                    <p>Due in 14 days</p>
-                                </div>
-                                <div class="badge borrowed">Borrowed by {{ person }}</div>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
+            <form action="/admin_login" method="POST">
+                <div class="form-group">
+                    <label>Librarian ID</label>
+                    <input type="text" name="librarian_id" placeholder="e.g. admin" required>
                 </div>
-
-                <!-- Right Column: Actions -->
-                <div class="actions-section">
-                    <div class="glass-panel" style="background: rgba(0,0,0,0.2); padding: 20px;">
-                        <div class="tabs">
-                            <button class="tab-btn active" onclick="switchTab('borrow')">Borrow</button>
-                            <button class="tab-btn" onclick="switchTab('return')">Return</button>
-                        </div>
-
-                        <!-- Borrow Form -->
-                        <div id="borrow-tab" class="tab-content active">
-                            <h3>Borrow a Book</h3>
-                            <form action="/borrow" method="POST">
-                                <div class="form-group">
-                                    <label>Book Name</label>
-                                    <input type="text" name="book_name" placeholder="e.g. Harry Potter" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Your Name</label>
-                                    <input type="text" name="person_name" placeholder="e.g. John Doe" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Borrower ID</label>
-                                    <input type="text" name="borrower_id" placeholder="e.g. user" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Password</label>
-                                    <input type="password" name="password" placeholder="••••••••" required>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Borrow Book</button>
-                            </form>
-                        </div>
-
-                        <!-- Return Form -->
-                        <div id="return-tab" class="tab-content">
-                            <h3>Return a Book</h3>
-                            <form action="/return_book" method="POST">
-                                <div class="form-group">
-                                    <label>Book Name</label>
-                                    <input type="text" name="book_name" placeholder="e.g. Harry Potter" required>
-                                </div>
-                                <button type="submit" class="btn btn-success">Return Book</button>
-                            </form>
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="••••••••" required>
                 </div>
+                <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Login securely</button>
+            </form>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="/" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem;">&larr; Back to Portal</a>
             </div>
         </div>
     </div>
-
-    <script>
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            
-            if (tab === 'borrow') {
-                document.querySelectorAll('.tab-btn')[0].classList.add('active');
-                document.getElementById('borrow-tab').classList.add('active');
-            } else {
-                document.querySelectorAll('.tab-btn')[1].classList.add('active');
-                document.getElementById('return-tab').classList.add('active');
-            }
-        }
-    </script>
 </body>
 </html>

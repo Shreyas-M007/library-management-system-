@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Library Portal</title>
+    <title>Librarian Dashboard</title>
     <style>
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
 
@@ -355,97 +355,75 @@ input[type="number"]:focus {
 </head>
 <body>
     <div class="container">
-        <div class="glass-panel">
+        <div class="glass-panel" style="border-color: rgba(59, 130, 246, 0.3); box-shadow: 0 0 40px rgba(59, 130, 246, 0.15);">
             <div class="header">
-                <h1>📚 Library Portal</h1>
+                <h1>🛡️ Librarian Dashboard</h1>
                 <div class="header-actions">
-                    <a href="/admin_login">Librarian Login</a>
+                    <span style="margin-right: 20px; color: var(--text-secondary);">Logged in as <b>{{ admin_id }}</b></span>
+                    <a href="/logout" style="color: var(--accent-red);">Logout</a>
                 </div>
             </div>
 
-            {% if error_msg %}
-                <div class="alert alert-error">
-                    <strong>Error:</strong>&nbsp;{{ error_msg }}
-                </div>
-            {% endif %}
-
             <div class="dashboard-grid">
-                <!-- Left Column: Books -->
+                <!-- Left Column: Inventory -->
                 <div class="books-section">
-                    <h2>Available Books</h2>
+                    <h2>Library Inventory</h2>
                     {% if available_books|length == 0 %}
-                        <div class="empty-state">No books are currently available.</div>
+                        <div class="empty-state">Inventory is empty.</div>
                     {% else %}
                         {% for book, qty in available_books.items() %}
                             <div class="book-card">
                                 <div class="book-info">
                                     <h4>{{ book }}</h4>
-                                    <p>Standard Edition</p>
                                 </div>
-                                <div class="badge available">{{ qty }} Copies Left</div>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-
-                    <h2 style="margin-top: 30px;">Currently Borrowed</h2>
-                    {% if borrowed|length == 0 %}
-                        <div class="empty-state">No books are currently borrowed.</div>
-                    {% else %}
-                        {% for b_book, person in borrowed.items() %}
-                            <div class="book-card">
-                                <div class="book-info">
-                                    <h4>{{ b_book }}</h4>
-                                    <p>Due in 14 days</p>
-                                </div>
-                                <div class="badge borrowed">Borrowed by {{ person }}</div>
+                                <div class="badge available">{{ qty }} Copies Available</div>
                             </div>
                         {% endfor %}
                     {% endif %}
                 </div>
 
-                <!-- Right Column: Actions -->
+                <!-- Right Column: Admin Actions -->
                 <div class="actions-section">
-                    <div class="glass-panel" style="background: rgba(0,0,0,0.2); padding: 20px;">
+                    <div class="glass-panel" style="background: rgba(0,0,0,0.2); padding: 25px;">
+                        
                         <div class="tabs">
-                            <button class="tab-btn active" onclick="switchTab('borrow')">Borrow</button>
-                            <button class="tab-btn" onclick="switchTab('return')">Return</button>
+                            <button class="tab-btn active" onclick="switchTab('add')">Add Book</button>
+                            <button class="tab-btn" onclick="switchTab('remove')">Remove Book</button>
                         </div>
 
-                        <!-- Borrow Form -->
-                        <div id="borrow-tab" class="tab-content active">
-                            <h3>Borrow a Book</h3>
-                            <form action="/borrow" method="POST">
+                        <!-- Add Form -->
+                        <div id="add-tab" class="tab-content active">
+                            <h3>➕ Add Inventory</h3>
+                            <form action="/add" method="POST">
                                 <div class="form-group">
                                     <label>Book Name</label>
-                                    <input type="text" name="book_name" placeholder="e.g. Harry Potter" required>
+                                    <input type="text" name="book_name" placeholder="e.g. Python Crash Course" required>
                                 </div>
                                 <div class="form-group">
-                                    <label>Your Name</label>
-                                    <input type="text" name="person_name" placeholder="e.g. John Doe" required>
+                                    <label>Quantity to Add</label>
+                                    <input type="number" name="quantity" value="1" min="1" required>
                                 </div>
-                                <div class="form-group">
-                                    <label>Borrower ID</label>
-                                    <input type="text" name="borrower_id" placeholder="e.g. user" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Password</label>
-                                    <input type="password" name="password" placeholder="••••••••" required>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Borrow Book</button>
+                                <button type="submit" class="btn btn-primary">Add Copies</button>
                             </form>
                         </div>
 
-                        <!-- Return Form -->
-                        <div id="return-tab" class="tab-content">
-                            <h3>Return a Book</h3>
-                            <form action="/return_book" method="POST">
+                        <!-- Remove Form -->
+                        <div id="remove-tab" class="tab-content">
+                            <h3 style="color: var(--accent-red);">➖ Remove Inventory</h3>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 15px;">Warning: If quantity reaches zero, the book is deleted forever.</p>
+                            <form action="/remove" method="POST">
                                 <div class="form-group">
                                     <label>Book Name</label>
-                                    <input type="text" name="book_name" placeholder="e.g. Harry Potter" required>
+                                    <input type="text" name="book_name" placeholder="Exact book name" required>
                                 </div>
-                                <button type="submit" class="btn btn-success">Return Book</button>
+                                <div class="form-group">
+                                    <label>Quantity to Remove</label>
+                                    <input type="number" name="quantity" value="1" min="1" required>
+                                </div>
+                                <button type="submit" class="btn btn-danger">Remove Copies</button>
                             </form>
                         </div>
+                        
                     </div>
                 </div>
             </div>
@@ -457,12 +435,12 @@ input[type="number"]:focus {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
             
-            if (tab === 'borrow') {
+            if (tab === 'add') {
                 document.querySelectorAll('.tab-btn')[0].classList.add('active');
-                document.getElementById('borrow-tab').classList.add('active');
+                document.getElementById('add-tab').classList.add('active');
             } else {
                 document.querySelectorAll('.tab-btn')[1].classList.add('active');
-                document.getElementById('return-tab').classList.add('active');
+                document.getElementById('remove-tab').classList.add('active');
             }
         }
     </script>
