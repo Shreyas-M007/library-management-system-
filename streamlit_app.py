@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.set_page_config(page_title="Library Management", layout="wide")
+st.set_page_config(page_title="Library Management", layout="wide", initial_sidebar_state="expanded")
 
 # passwords
 LIBRARIANS = {"Admin":"1234", "Shreyas": "0007"}
@@ -90,7 +90,7 @@ html, body, [class*="css"] { font-family: 'Outfit', sans-serif !important; }
     animation: bg 15s ease infinite;
 }
 @keyframes bg { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
-#MainMenu, footer, header { visibility: hidden; }
+#MainMenu, footer { visibility: hidden; }
 div[data-testid="stVerticalBlockBorderWrapper"] > div {
     background: rgba(255,255,255,0.05) !important;
     backdrop-filter: blur(16px) !important;
