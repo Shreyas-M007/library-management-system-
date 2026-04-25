@@ -179,19 +179,21 @@ if st.session_state.logged_in == False:
 # ---- LIBRARIAN DASHBOARD ----
 elif st.session_state.role == "librarian":
 
-    with st.sidebar:
+    st.markdown("<h1>🛡️ Librarian Dashboard</h1>", unsafe_allow_html=True)
+    m1, m2, m3, m4, m5 = st.columns([2, 1, 1, 1, 1])
+    with m1:
         st.markdown("<h3>🛡️ " + st.session_state.username + "</h3>", unsafe_allow_html=True)
-        st.divider()
+    with m2:
         st.metric("Total Copies", sum(st.session_state.books.values()))
+    with m3:
         st.metric("Unique Titles", len(st.session_state.books))
+    with m4:
         st.metric("Borrowed", len(st.session_state.borrowed))
-        st.divider()
+    with m5:
         if st.button("🚪 Logout", use_container_width=True, key="lib_logout"):
             st.session_state.logged_in = False
             st.session_state.role = ""
             st.rerun()
-
-    st.markdown("<h1>🛡️ Librarian Dashboard</h1>", unsafe_allow_html=True)
     st.divider()
     col1, col2 = st.columns([1.5, 1])
 
@@ -247,18 +249,19 @@ elif st.session_state.role == "librarian":
 # ---- BORROWER DASHBOARD ----
 else:
 
-    with st.sidebar:
+    st.markdown("<h1>📖 Borrower Portal</h1>", unsafe_allow_html=True)
+    m1, m2, m3, m4 = st.columns([2, 1, 1, 1])
+    with m1:
         st.markdown("<h3>👤 " + st.session_state.username + "</h3>", unsafe_allow_html=True)
-        st.divider()
+    with m2:
         st.metric("Available Copies", sum(st.session_state.books.values()))
+    with m3:
         st.metric("Books Borrowed", len(st.session_state.borrowed))
-        st.divider()
+    with m4:
         if st.button("🚪 Logout", use_container_width=True, key="bor_logout"):
             st.session_state.logged_in = False
             st.session_state.role = ""
             st.rerun()
-
-    st.markdown("<h1>📖 Borrower Portal</h1>", unsafe_allow_html=True)
     st.divider()
     col1, col2 = st.columns(2)
 
