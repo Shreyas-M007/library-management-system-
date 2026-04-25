@@ -194,19 +194,23 @@ if st.session_state.logged_in == False:
 # ---- LIBRARIAN DASHBOARD ----
 elif st.session_state.role == "librarian":
 
-    with st.sidebar:
-        st.markdown("<h3>🛡️ " + st.session_state.username + "</h3>", unsafe_allow_html=True)
-        st.divider()
+    # top info bar (always visible)
+    info1, info2, info3, info4, info5 = st.columns([2, 1, 1, 1, 1])
+    with info1:
+        st.markdown("<h3 style='margin:0;'>🛡️ " + st.session_state.username + "</h3>", unsafe_allow_html=True)
+    with info2:
         st.metric("Total Copies", sum(st.session_state.books.values()))
+    with info3:
         st.metric("Unique Titles", len(st.session_state.books))
+    with info4:
         st.metric("Borrowed", len(st.session_state.borrowed))
-        st.divider()
-        if st.button("Logout", use_container_width=True):
+    with info5:
+        st.markdown("<br>", unsafe_allow_html=True)
+        if st.button("🚪 Logout", use_container_width=True, key="lib_logout"):
             st.session_state.logged_in = False
             st.session_state.role = ""
             st.rerun()
 
-    st.markdown("<h1>🛡️ Librarian Dashboard</h1>", unsafe_allow_html=True)
     st.divider()
     col1, col2 = st.columns([1.5, 1])
 
@@ -264,18 +268,21 @@ elif st.session_state.role == "librarian":
 # ---- BORROWER DASHBOARD ----
 else:
 
-    with st.sidebar:
-        st.markdown("<h3>👤 " + st.session_state.username + "</h3>", unsafe_allow_html=True)
-        st.divider()
+    # top info bar (always visible)
+    info1, info2, info3, info4 = st.columns([2, 1, 1, 1])
+    with info1:
+        st.markdown("<h3 style='margin:0;'>👤 " + st.session_state.username + "</h3>", unsafe_allow_html=True)
+    with info2:
         st.metric("Available Copies", sum(st.session_state.books.values()))
+    with info3:
         st.metric("Books Borrowed", len(st.session_state.borrowed))
-        st.divider()
-        if st.button("Logout", use_container_width=True):
+    with info4:
+        st.markdown("<br>", unsafe_allow_html=True)
+        if st.button("🚪 Logout", use_container_width=True, key="bor_logout"):
             st.session_state.logged_in = False
             st.session_state.role = ""
             st.rerun()
 
-    st.markdown("<h1>📖 Borrower Portal</h1>", unsafe_allow_html=True)
     st.divider()
     col1, col2 = st.columns(2)
 
