@@ -4,7 +4,7 @@ st.set_page_config(page_title="Library Management", layout="wide")
 
 # passwords
 LIBRARIANS = {"Admin":"1234", "Shreyas": "0007"}
-BORROWERS = {"Shivam": "1111", "Shivram": "2222"}
+BORROWERS = {"Shivam": "1111", "Shivram": "2222","Shreyas": "2007"}
 
 # university roll numbers (USN) for each borrower
 BORROWER_USN = {"Shivam": "1BM25AI154", "Shivram": "1BM25AI155","Shreyas": "1BM25AI157"}
