@@ -133,6 +133,19 @@ def show_card(book_name, badge_text, color):
 
 
 
+# draw a dynamic book card with colored badge
+def show_card(book_name, badge_text, color):
+    if color == "green":
+        style = "background:rgba(16,185,129,0.2);color:#10b981;border:1px solid rgba(16,185,129,0.4);"
+    else:
+        style = "background:rgba(59,130,246,0.2);color:#3b82f6;border:1px solid rgba(59,130,246,0.4);"
+    st.markdown(f"""<div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);
+    border-radius:12px;padding:16px 20px;display:flex;justify-content:space-between;
+    align-items:center;margin-bottom:10px;transition:all 0.3s ease;">
+    <span style="font-weight:700;color:#f8fafc;font-size:1.05rem;">{book_name}</span>
+    <span style="padding:6px 14px;border-radius:20px;font-size:0.85rem;font-weight:600;{style}">{badge_text}</span>
+    </div>""", unsafe_allow_html=True)
+
 # ---- LOGIN PAGE ----
 if st.session_state.logged_in == False:
 
@@ -193,8 +206,12 @@ elif st.session_state.role == "librarian":
     with col1:
         with st.container(border=True):
             st.subheader("📦 Library Inventory")
-            for book, qty in st.session_state.books.items():
-                st.write(f"**{book}**: {qty} copies")
+            if len(st.session_state.books) == 0:
+                st.info("Inventory is empty.")
+            else:
+                for book in st.session_state.books:
+                    qty = st.session_state.books[book]
+                    show_card(book, str(qty) + " Copies Available", "green")
 
     with col2:
         with st.container(border=True):
@@ -256,8 +273,12 @@ else:
     with col1:
         with st.container(border=True):
             st.subheader("📚 Available Books")
-            for book, qty in st.session_state.books.items():
-                st.write(f"**{book}**: {qty} copies left")
+            if len(st.session_state.books) == 0:
+                st.info("No books available.")
+            else:
+                for book in st.session_state.books:
+                    qty = st.session_state.books[book]
+                    show_card(book, str(qty) + " Copies Left", "green")
 
         st.markdown("<br>", unsafe_allow_html=True)
 
@@ -282,8 +303,12 @@ else:
     with col2:
         with st.container(border=True):
             st.subheader("📋 Currently Borrowed")
-            for book, person in st.session_state.borrowed.items():
-                st.write(f"**{book}**: Borrowed by {person}")
+            if len(st.session_state.borrowed) == 0:
+                st.info("No books borrowed.")
+            else:
+                for book in st.session_state.borrowed:
+                    person = st.session_state.borrowed[book]
+                    show_card(book, "By " + person, "blue")
 
         st.markdown("<br>", unsafe_allow_html=True)
 
