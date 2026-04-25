@@ -246,6 +246,17 @@ elif st.session_state.role == "librarian":
                     else:
                         st.error(fix_name(rem_name) + " not found!")
 
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        with st.container(border=True):
+            st.subheader("📋 Currently Borrowed")
+            if len(st.session_state.borrowed) == 0:
+                st.info("No books currently borrowed.")
+            else:
+                for book in st.session_state.borrowed:
+                    person = st.session_state.borrowed[book]
+                    show_card(book, "By " + person, "blue")
+
 # ---- BORROWER DASHBOARD ----
 else:
 
