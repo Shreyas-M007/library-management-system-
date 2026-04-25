@@ -85,10 +85,10 @@ html, body, [class*="css"] { font-family: 'Outfit', sans-serif !important; }
     animation: bg 15s ease infinite;
 }
 @keyframes bg { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
-#MainMenu, footer, header { visibility: hidden; height: 0; overflow: hidden; }
+#MainMenu, footer { visibility: hidden; }
 div[data-testid="stToolbar"] { display: none !important; }
 div[data-testid="stDecoration"] { display: none !important; }
-div[data-testid="stHeader"] { height: 0 !important; }
+header[data-testid="stHeader"] { background: transparent !important; }
 div[data-testid="stVerticalBlockBorderWrapper"] > div {
     background: rgba(255,255,255,0.05) !important;
     backdrop-filter: blur(16px) !important;
