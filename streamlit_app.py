@@ -184,11 +184,11 @@ elif st.session_state.role == "librarian":
     with m1:
         st.markdown("<h3>🛡️ " + st.session_state.username + "</h3>", unsafe_allow_html=True)
     with m2:
-        st.metric("Total Copies", sum(st.session_state.books.values()))
+        st.metric("Total Copies Available", sum(st.session_state.books.values()))
     with m3:
         st.metric("Unique Titles", len(st.session_state.books))
     with m4:
-        st.metric("Borrowed", len(st.session_state.borrowed))
+        st.metric("Borrowed books", len(st.session_state.borrowed))
     with m5:
         if st.button("🚪 Logout", use_container_width=True, key="lib_logout"):
             st.session_state.logged_in = False
