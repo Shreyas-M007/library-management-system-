@@ -74,6 +74,11 @@ if "role" not in st.session_state:
 if "username" not in st.session_state:
     st.session_state.username = ""
 
+# flags for enter-key submission
+for flag in ["do_borrower_login", "do_librarian_login", "do_add_book", "do_remove_book", "do_borrow", "do_return"]:
+    if flag not in st.session_state:
+        st.session_state[flag] = False
+
 # inject dark mode css styling from python
 st.markdown("""
 <style>
@@ -158,11 +163,13 @@ if st.session_state.logged_in == False:
             tab1, tab2 = st.tabs(["👤 Borrower Login", "🛡️ Librarian Login"])
 
             with tab1:
-                user_id = st.text_input("Borrower ID", key="b_id")
-                user_usn = st.text_input("USN (University Serial Number)", key="b_usn")
-                user_pass = st.text_input("Password", type="password", key="b_pass")
-                if st.button("Login as Borrower", use_container_width=True):
-                    if user_id in BORROWERS and BORROWERS[user_id] == user_pass and BORROWER_USN[user_id] == user_usn:
+                def on_borrower_enter(): st.session_state.do_borrower_login = True
+                user_id = st.text_input("Borrower ID", key="b_id", on_change=on_borrower_enter)
+                user_usn = st.text_input("USN (University Serial Number)", key="b_usn", on_change=on_borrower_enter)
+                user_pass = st.text_input("Password", type="password", key="b_pass", on_change=on_borrower_enter)
+                if st.button("Login as Borrower", use_container_width=True) or st.session_state.do_borrower_login:
+                    st.session_state.do_borrower_login = False
+                    if user_id in BORROWERS and BORROWERS[user_id] == user_pass and BORROWER_USN.get(user_id) == user_usn:
                         st.session_state.logged_in = True
                         st.session_state.role = "borrower"
                         st.session_state.username = user_id
@@ -171,9 +178,11 @@ if st.session_state.logged_in == False:
                         st.error("Wrong ID, USN, or Password!")
 
             with tab2:
-                lib_id = st.text_input("Librarian ID", key="l_id")
-                lib_pass = st.text_input("Password", type="password", key="l_pass")
-                if st.button("Login as Librarian", use_container_width=True):
+                def on_librarian_enter(): st.session_state.do_librarian_login = True
+                lib_id = st.text_input("Librarian ID", key="l_id", on_change=on_librarian_enter)
+                lib_pass = st.text_input("Password", type="password", key="l_pass", on_change=on_librarian_enter)
+                if st.button("Login as Librarian", use_container_width=True) or st.session_state.do_librarian_login:
+                    st.session_state.do_librarian_login = False
                     if lib_id in LIBRARIANS and LIBRARIANS[lib_id] == lib_pass:
                         st.session_state.logged_in = True
                         st.session_state.role = "librarian"
@@ -214,9 +223,11 @@ elif st.session_state.role == "librarian":
     with col2:
         with st.container(border=True):
             st.subheader("➕ Add Books")
-            add_name = st.text_input("Book Name", key="add_name")
+            def on_add_enter(): st.session_state.do_add_book = True
+            add_name = st.text_input("Book Name", key="add_name", on_change=on_add_enter)
             add_qty = st.number_input("Quantity", min_value=1, value=1, key="add_qty")
-            if st.button("Add to Inventory", use_container_width=True):
+            if st.button("Add to Inventory", use_container_width=True) or st.session_state.do_add_book:
+                st.session_state.do_add_book = False
                 book = fix_name(add_name)
                 if book == "":
                     st.error("Please enter a book name!")
@@ -234,9 +245,11 @@ elif st.session_state.role == "librarian":
 
         with st.container(border=True):
             st.subheader("➖ Remove Books")
-            rem_name = st.text_input("Book Name", key="rem_name")
+            def on_rem_enter(): st.session_state.do_remove_book = True
+            rem_name = st.text_input("Book Name", key="rem_name", on_change=on_rem_enter)
             rem_qty = st.number_input("Quantity", min_value=1, value=1, key="rem_qty")
-            if st.button("Remove from Inventory", use_container_width=True):
+            if st.button("Remove from Inventory", use_container_width=True) or st.session_state.do_remove_book:
+                st.session_state.do_remove_book = False
                 found = find_book(rem_name, st.session_state.books)
                 if found:
                     st.session_state.books[found] = st.session_state.books[found] - rem_qty
@@ -280,8 +293,10 @@ else:
 
         with st.container(border=True):
             st.subheader("➕ Borrow a Book")
-            borrow_name = st.text_input("Book Name (any case)", key="borrow_name")
-            if st.button("Borrow Book", use_container_width=True):
+            def on_borrow_enter(): st.session_state.do_borrow = True
+            borrow_name = st.text_input("Book Name (any case)", key="borrow_name", on_change=on_borrow_enter)
+            if st.button("Borrow Book", use_container_width=True) or st.session_state.do_borrow:
+                st.session_state.do_borrow = False
                 found = find_book(borrow_name, st.session_state.books)
                 if found:
                     st.session_state.books[found] = st.session_state.books[found] - 1
@@ -309,8 +324,10 @@ else:
 
         with st.container(border=True):
             st.subheader("↩️ Return a Book")
-            return_name = st.text_input("Book Name (any case)", key="return_name")
-            if st.button("Return Book", use_container_width=True):
+            def on_return_enter(): st.session_state.do_return = True
+            return_name = st.text_input("Book Name (any case)", key="return_name", on_change=on_return_enter)
+            if st.button("Return Book", use_container_width=True) or st.session_state.do_return:
+                st.session_state.do_return = False
                 found = find_book(return_name, st.session_state.borrowed)
                 if found:
                     if st.session_state.borrowed[found] == st.session_state.username:
