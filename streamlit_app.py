@@ -158,9 +158,9 @@ if st.session_state.logged_in == False:
             tab1, tab2 = st.tabs(["👤 Borrower Login", "🛡️ Librarian Login"])
 
             with tab1:
-                user_id = st.text_input("Borrower ID")
-                user_usn = st.text_input("USN (University Roll Number)")
-                user_pass = st.text_input("Password", type="password")
+                user_id = st.text_input("Borrower ID", key="b_id")
+                user_usn = st.text_input("USN (University Roll Number)", key="b_usn")
+                user_pass = st.text_input("Password", type="password", key="b_pass")
                 if st.button("Login as Borrower", use_container_width=True, key="b_btn"):
                     if user_id in BORROWERS and BORROWERS[user_id] == user_pass and BORROWER_USN[user_id] == user_usn:
                         st.session_state.logged_in = True
@@ -171,8 +171,8 @@ if st.session_state.logged_in == False:
                         st.error("Wrong ID, USN, or Password!")
 
             with tab2:
-                lib_id = st.text_input("Librarian ID")
-                lib_pass = st.text_input("Password", type="password")
+                lib_id = st.text_input("Librarian ID", key="l_id")
+                lib_pass = st.text_input("Password", type="password", key="l_pass")
                 if st.button("Login as Librarian", use_container_width=True, key="l_btn"):
                     if lib_id in LIBRARIANS and LIBRARIANS[lib_id] == lib_pass:
                         st.session_state.logged_in = True
@@ -214,8 +214,8 @@ elif st.session_state.role == "librarian":
     with col2:
         with st.container(border=True):
             st.subheader("➕ Add Books")
-            add_name = st.text_input("Book Name")
-            add_qty = st.number_input("Quantity", min_value=1, value=1)
+            add_name = st.text_input("Book Name", key="add_name")
+            add_qty = st.number_input("Quantity", min_value=1, value=1, key="add_qty")
             if st.button("Add to Inventory", use_container_width=True, key="add_btn"):
                 book = fix_name(add_name)
                 if book == "":
@@ -234,8 +234,8 @@ elif st.session_state.role == "librarian":
 
         with st.container(border=True):
             st.subheader("➖ Remove Books")
-            rem_name = st.text_input("Book Name")
-            rem_qty = st.number_input("Quantity", min_value=1, value=1)
+            rem_name = st.text_input("Book Name", key="rem_name")
+            rem_qty = st.number_input("Quantity", min_value=1, value=1, key="rem_qty")
             if st.button("Remove from Inventory", use_container_width=True, key="rem_btn"):
                 found = find_book(rem_name, st.session_state.books)
                 if found:
@@ -280,7 +280,7 @@ else:
 
         with st.container(border=True):
             st.subheader("➕ Borrow a Book")
-            borrow_name = st.text_input("Book Name (any case)")
+            borrow_name = st.text_input("Book Name (any case)", key="borrow_name")
             if st.button("Borrow Book", use_container_width=True, key="borrow_btn"):
                 found = find_book(borrow_name, st.session_state.books)
                 if found:
@@ -309,7 +309,7 @@ else:
 
         with st.container(border=True):
             st.subheader("↩️ Return a Book")
-            return_name = st.text_input("Book Name (any case)")
+            return_name = st.text_input("Book Name (any case)", key="return_name")
             if st.button("Return Book", use_container_width=True, key="return_btn"):
                 found = find_book(return_name, st.session_state.borrowed)
                 if found:
