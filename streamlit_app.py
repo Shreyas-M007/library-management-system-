@@ -20,7 +20,7 @@ def load_books():
                 books[parts[0]] = int(parts[1])
         file.close()
     except:
-        books = {"Project hail mary": 6, "Hamlet": 10, "Interstellar": 5 , "Dune": 7}
+        books = {"Project Hail Mary": 6, "Hamlet": 10, "Interstellar": 5 , "Dune": 7}
     return books
 
 # save books to file
