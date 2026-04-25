@@ -121,6 +121,16 @@ p, span, label { color: #cbd5e1 !important; }
 div[data-testid="stMetricValue"] { color: #3b82f6 !important; font-weight: 700 !important; }
 </style>
 """, unsafe_allow_html=True)
+def show_card(book_name, badge_text, color):
+    if color == "green":
+        style = "background:rgba(16,185,129,0.2);color:#10b981;border:1px solid rgba(16,185,129,0.4);"
+    else:
+        style = "background:rgba(59,130,246,0.2);color:#3b82f6;border:1px solid rgba(59,130,246,0.4);"
+    st.markdown(f"""<div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:12px;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+    <span style="font-weight:700;color:#f8fafc;">{book_name}</span>
+    <span style="padding:6px 14px;border-radius:20px;font-size:0.85rem;font-weight:600;{style}">{badge_text}</span>
+    </div>""", unsafe_allow_html=True)
+
 
 
 # ---- LOGIN PAGE ----
