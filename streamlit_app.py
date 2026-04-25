@@ -1,13 +1,13 @@
 import streamlit as st
 
-st.set_page_config(page_title="Library Management", page_icon="📚", layout="wide")
+st.set_page_config(page_title="Library Management", layout="wide")
 
 # passwords
-LIBRARIANS = {"admin": "1234", "shreyas": "0007"}
-BORROWERS = {"user": "0000", "Shivam": "1111", "Shivram": "2222"}
+LIBRARIANS = {"Admin":"1234", "Shreyas": "0007"}
+BORROWERS = {"Shivam": "1111", "Shivram": "2222"}
 
 # university roll numbers (USN) for each borrower
-BORROWER_USN = {"user": "USN001", "Shivam": "4SO22CS045", "Shivram": "4SO22CS046"}
+BORROWER_USN = {"Shivam": "1BM25AI154", "Shivram": "1BM25AI155","Shreyas": "1BM25AI157"}
 
 # load books from file
 def load_books():
@@ -20,7 +20,7 @@ def load_books():
                 books[parts[0]] = int(parts[1])
         file.close()
     except:
-        books = {"Harry Potter": 3, "Atomic Habits": 2, "Python Crash Course": 1}
+        books = {"Project Hail mary": 6, "Hamlet": 10, "Interstellar": 5 , "Dune": 7}
     return books
 
 # save books to file
@@ -121,6 +121,7 @@ p, span, label { color: #cbd5e1 !important; }
 div[data-testid="stMetricValue"] { color: #3b82f6 !important; font-weight: 700 !important; }
 </style>
 """, unsafe_allow_html=True)
+
 
 # ---- LOGIN PAGE ----
 if st.session_state.logged_in == False:
