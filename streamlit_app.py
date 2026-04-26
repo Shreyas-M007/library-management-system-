@@ -291,7 +291,7 @@ else:
         with st.container(border=True):
             st.subheader("➕ Borrow a Book")
             with st.form("borrow_form"):
-                borrow_name = st.text_input("Book Name (any case)")
+                borrow_name = st.text_input("Book Name ")
                 if st.form_submit_button("Borrow Book", use_container_width=True):
                     found = find_book(borrow_name, st.session_state.books)
                     if found:
@@ -321,7 +321,7 @@ else:
         with st.container(border=True):
             st.subheader("↩️ Return a Book")
             with st.form("return_form"):
-                return_name = st.text_input("Book Name (any case)")
+                return_name = st.text_input("Book Name")
                 if st.form_submit_button("Return Book", use_container_width=True):
                     found = find_book(return_name, st.session_state.borrowed)
                     if found:
