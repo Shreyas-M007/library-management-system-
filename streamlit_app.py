@@ -188,7 +188,7 @@ elif st.session_state.role == "librarian":
     with m3:
         st.metric("Unique Titles", len(st.session_state.books))
     with m4:
-        st.metric("Borrowed books", len(st.session_state.borrowed))
+        st.metric("Borrowed books (by borrowers)", len(st.session_state.borrowed))
     with m5:
         if st.button("🚪 Logout", use_container_width=True, key="lib_logout"):
             st.session_state.logged_in = False
@@ -267,7 +267,7 @@ else:
     with m2:
         st.metric("Available Copies", sum(st.session_state.books.values()))
     with m3:
-        st.metric("Books Borrowed", len(st.session_state.borrowed))
+        st.metric("Books Borrowed (by all borrowers)", len(st.session_state.borrowed))
     with m4:
         if st.button("🚪 Logout", use_container_width=True, key="bor_logout"):
             st.session_state.logged_in = False
