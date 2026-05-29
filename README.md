@@ -1,4 +1,4 @@
-# library manager
+# Library management system
 
 hi! this is my simple library management project. i made it using python. 
 
