@@ -1,6 +1,6 @@
 # library manager
 
-hi! this is my simple library management project. i made it using python and flask. 
+hi! this is my simple library management project. i made it using python. 
 
 i didn't use any complicated databases, it just secretly saves all the books into simple text files so you don't lose them when you close the app. it also looks pretty cool with some basic css buttons.
 
