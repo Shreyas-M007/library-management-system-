@@ -1,13 +1,25 @@
-# Library management system
+# 📚 Library Management System
 
-hi! this is my simple library management project. i made it using python. 
+A lightweight, 100% Python-based web application built with Streamlit to manage library operations efficiently.
 
-i didn't use any complicated databases, it just secretly saves all the books into simple text files so you don't lose them when you close the app. it also looks pretty cool with some basic css buttons.
+## 🚀 Live Demo
+[https://lib-management-system.streamlit.app/](https://lib-management-system.streamlit.app/)
 
-### what it does:
-- you can add new books to the list
-- you can type your name to borrow a book
-- you can return books
-- everything saves automatically to `books.txt`
+## 🛠 Features
+- **Book Inventory:** Add new books to the system easily.
+- **Search & Filter:** Instantly find books by title or author.
+- **Issue/Return System:** Manage book availability statuses in real-time.
+- **Responsive UI:** Clean, intuitive interface powered by Streamlit.
+
+## 💻 Tech Stack
+- **Language:** Python
+- **Framework:** Streamlit
+- **Logic:** Pure Python (Native data structures & session state handling)
+
+## 🏗 How to Run Locally
+1. Clone this repository:
+   ```bash
+   git clone [https://github.com/Shreyas-M007/library-management-system-.git](https://github.com/Shreyas-M007/library-management-system-.git)
+   cd library-management-system-
 
 
